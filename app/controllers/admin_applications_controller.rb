@@ -10,7 +10,7 @@ class AdminApplicationsController < ApplicationController
 
   def update
     @application = Application.find(params[:id])
-    pet_application = PetApplication.where("pet_id = #{params[:pet_id]}")
+    pet_application = PetApplication.where("pet_id = #{params[:pet_id]}").where("application_id = #{@application.id}")
     if params[:status]
       pet_application.update(status: params[:status])
     end
