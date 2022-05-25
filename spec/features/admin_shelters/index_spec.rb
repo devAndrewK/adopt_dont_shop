@@ -45,7 +45,7 @@ RSpec.describe 'the admin shelters index' do
 
     visit "/applications/#{@application1.id}"
 
-    fill_in "Search", with: "Clawdia"
+    fill_in "search", with: "Clawdia"
     click_button "Search"
     click_button "Adopt Clawdia"
     fill_in "description", with: "This is a description."

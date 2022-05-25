@@ -15,10 +15,11 @@ RSpec.describe 'the admin applications show page' do
     it 'can approve a pet' do
                     
         visit "/applications/#{@application.id}"
-        fill_in "Search", with: "Babe"
+        #save_and_open_page
+        fill_in "search", with: "Babe"
         click_button "Search"
         click_button "Adopt Babe"
-        fill_in "Search", with: "elle"
+        fill_in "search", with: "elle"
         click_button "Search"
         click_button "Adopt Elle"
         fill_in "description", with: "This is a description."
@@ -44,10 +45,10 @@ RSpec.describe 'the admin applications show page' do
     it 'can reject a pet' do
             
         visit "/applications/#{@application.id}"
-        fill_in "Search", with: "Babe"
+        fill_in "search", with: "Babe"
         click_button "Search"
         click_button "Adopt Babe"
-        fill_in "Search", with: "elle"
+        fill_in "search", with: "elle"
         click_button "Search"
         click_button "Adopt Elle"
         fill_in "description", with: "This is a description."
