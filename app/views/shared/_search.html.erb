@@ -1,0 +1,5 @@
+<%= form_with url: path, method: method, local: true do |f| %>
+    <p><% f.label :search %>
+    <%= f.text_field :search %></p>
+    <%= f.submit button_text %>
+<% end %>

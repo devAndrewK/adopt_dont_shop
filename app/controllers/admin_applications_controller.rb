@@ -1,11 +1,7 @@
 class AdminApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:id])
-    if params[:search]
-      @pets = Pet.search(params[:search])
-    else
-      @pets = @application.show_pets
-    end
+    @pets = @application.show_pets
   end
 
   def update

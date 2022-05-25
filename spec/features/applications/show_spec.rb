@@ -28,7 +28,7 @@ RSpec.describe 'the application show' do
 
         expect(page).to have_content("Add a Pet to this Application")
         expect(page).to have_button("Search")
-        fill_in "Search", with: "Babe"
+        fill_in "search", with: "Babe"
         click_button "Search"
         expect(current_path).to eq("/applications/#{application.id}")
         expect(page).to have_content("Babe")
@@ -48,7 +48,7 @@ RSpec.describe 'the application show' do
 
         expect(page).to_not have_content("Submit")
         expect(page).to_not have_content("Please tell us why you would make an excellent candidate for adoption.")
-        fill_in "Search", with: "Babe"
+        fill_in "search", with: "Babe"
         click_button "Search"
 
         click_button "Adopt Babe"
@@ -66,7 +66,7 @@ RSpec.describe 'the application show' do
         pet_3 = Pet.create(adoptable: true, age: 4, breed: 'chihuahua', name: 'Elle', shelter_id: shelter.id)
         visit "/applications/#{application.id}"
 
-        fill_in "Search", with: "Babe"
+        fill_in "search", with: "Babe"
         click_button "Search"
         click_button "Adopt Babe"
         expect(page).to_not have_content("Adopt Babe")
