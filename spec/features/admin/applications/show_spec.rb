@@ -23,22 +23,22 @@ RSpec.describe 'Admin Application show page' do
 
         visit "/admin/applications/#{@application_1.id}"
         
-        click_button "Approve Babe's Adoption"
+        click_button "Approve Mr. Pirate's Adoption"
         
         visit "/admin/applications/#{@application_2.id}"
-        expect(page).to have_content("Approve Babe's Adoption")
-        expect(page).to have_content("Reject Babe's Adoption")
+        expect(page).to have_content("Approve Mr. Pirate's Adoption")
+        expect(page).to have_content("Reject Mr. Pirate's Adoption")
     end
 
     it "can reject an application without affecting other applications for that pet" do
 
         visit "/admin/applications/#{@application_1.id}"
         
-        click_button "Reject Babe's Adoption"
+        click_button "Reject Mr. Pirate's Adoption"
         
         visit "/admin/applications/#{@application_2.id}"
-        expect(page).to have_content("Approve Babe's Adoption")
-        expect(page).to have_content("Reject Babe's Adoption")
+        expect(page).to have_content("Approve Mr. Pirate's Adoption")
+        expect(page).to have_content("Reject Mr. Pirate's Adoption")
     end
 
 end
