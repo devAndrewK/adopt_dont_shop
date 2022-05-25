@@ -7,11 +7,12 @@
     <h3>Why I should be approved: <%= @application.description %></h3>
 <% end %>
 <h3>Application Status: <%= @application.application_status %></h3>
-<h2> Pets: </h2>
-<% @application.pets.each do |pet| %>
-<h3><%= link_to "#{pet.name}", "/pets/#{pet.id}" %></h3>
+<% if @pets_added %>
+    <h2> Pets: </h2>
+    <% @application.pets.each do |pet| %>
+    <h3><%= link_to "#{pet.name}", "/pets/#{pet.id}" %></h3>
+    <% end %>
 <% end %>
-
 <% if @application.application_status == 'In Progress' %>
     <% if @pets_added %>
         <h3>Please tell us why you would make an excellent candidate for adoption.</h3>
