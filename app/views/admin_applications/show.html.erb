@@ -1,0 +1,28 @@
+<h1><%= @application.name %></h1>
+<h3><%= @application.street %></h3>
+<h3><%= @application.city %></h3>
+<h3><%= @application.state %></h3>
+<h3><%= @application.zip %></h3>
+
+<h3>Application Status: <%= @application.application_status %></h3>
+
+<h2> Pets: </h2>
+<% @application.pets.each_with_index do |pet, index| %>
+<div id="pet-<%= index %>">
+  <h3> <%= pet.name %> </h3>
+  <% if pet.has_status(@application.id) == false %>
+    <%= form_with url: "/admin/applications/#{@application.id}", method: :patch, local: true do |f| %>
+      <%= f.hidden_field :pet_id, value: "#{pet.id}" %>
+      <%= f.hidden_field :status, value: "approved" %>
+      <%= f.submit "Approve application for #{pet.name}" %>
+    <% end %>
+    <%= form_with url: "/admin/applications/#{@application.id}", method: :patch, local: true do |f| %>
+      <%= f.hidden_field :pet_id, value: "#{pet.id}" %>
+      <%= f.hidden_field :status, value: "rejected" %>
+      <%= f.submit "Reject application for #{pet.name}" %>
+    <% end %>
+  <% else %>
+    <%= pet.status(@application.id) %>
+  <% end %>
+</div>
+<% end %>
