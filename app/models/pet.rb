@@ -12,4 +12,16 @@ class Pet < ApplicationRecord
   def self.adoptable
     where(adoptable: true)
   end
+
+  def has_status(id)
+    if self.pet_applications.where("application_id = #{id}").empty?
+      false
+    else
+      self.pet_applications.where("application_id = #{id}").first.status != nil
+    end
+  end
+
+  def status(id)
+    self.pet_applications.where("application_id = #{id}").first.status
+  end
 end
