@@ -1,44 +1,99 @@
 require 'rails_helper'
 
-RSpec.describe 'Admin Application show page' do
-
+RSpec.describe 'the admin applications show page' do
     before(:each) do
-        @shelter_1 = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
-        @shelter_2 = Shelter.create(name: 'RGV animal shelter', city: 'Harlingen, TX', foster_program: false, rank: 5)
-        @shelter_3 = Shelter.create(name: 'Fancy pets of Colorado', city: 'Denver, CO', foster_program: true, rank: 10)
-        @pet_1 = @shelter_1.pets.create(name: 'Mr. Pirate', breed: 'tuxedo shorthair', age: 5, adoptable: true)
-        @pet_2 = @shelter_1.pets.create(name: 'Clawdia', breed: 'shorthair', age: 3, adoptable: true)
-        @pet_3 = @shelter_3.pets.create(name: 'Lucille Bald', breed: 'sphynx', age: 8, adoptable: true)
-        @application_1 = Application.create!(name: 'Andrew', street: "123 Street", city: "Kenosha",
-            state: "WI", zip: 53144, description: "This is a description of why I'm a good fit.",
-            application_status: "In Progress")
+        @application = Application.create!(name: 'Andrew', street: "123 Street", city: "Kenosha",
+            state: "WI", zip: 53144, application_status: "In Progress")
         @application_2 = Application.create!(name: 'Eric', street: "345 Street", city: "Denver",
-            state: "CO", zip: 22387, description: "This is a better description of why I'm a good fit.",
-            application_status: "In Progress")
-        PetApplication.create(pet_id: @pet_1.id, application_id: @application_1.id)
-        PetApplication.create(pet_id: @pet_1.id, application_id: @application_2.id)
+            state: "CO", zip: 22387, application_status: "In Progress")
+        @shelter = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
+        @pet_1 = Pet.create(adoptable: true, age: 7, breed: 'sphynx', name: 'Bare-y Manilow', shelter_id: @shelter.id)
+        @pet_2 = Pet.create(adoptable: true, age: 3, breed: 'domestic pig', name: 'Babe', shelter_id: @shelter.id)
+        @pet_3 = Pet.create(adoptable: true, age: 4, breed: 'chihuahua', name: 'Elle', shelter_id: @shelter.id)
+    end
+                
+    it 'can approve a pet' do
+                    
+        visit "/applications/#{@application.id}"
+        fill_in "Search", with: "Babe"
+        click_button "Search"
+        click_button "Adopt Babe"
+        fill_in "Search", with: "elle"
+        click_button "Search"
+        click_button "Adopt Elle"
+        fill_in "description", with: "This is a description."
+        click_button "Submit"
             
+        visit "/admin/applications/#{@application.id}"
+            
+        within "#pet-0" do
+            expect(page).to have_button("Approve application for Babe")
+            click_button "Approve application for Babe"
+            expect(page).to_not have_button("Approve application for Babe")
+            expect(page).to have_content("approved")
+        end
+            
+        within "#pet-1" do
+            expect(page).to have_button("Approve application for Elle")
+            click_button "Approve application for Elle"
+            expect(page).to_not have_button("Approve application for Elle")
+            expect(page).to have_content("approved")
+        end
     end
+        
+    it 'can reject a pet' do
+            
+        visit "/applications/#{@application.id}"
+        fill_in "Search", with: "Babe"
+        click_button "Search"
+        click_button "Adopt Babe"
+        fill_in "Search", with: "elle"
+        click_button "Search"
+        click_button "Adopt Elle"
+        fill_in "description", with: "This is a description."
+        click_button "Submit"
+            
+        visit "/admin/applications/#{@application.id}"
+            
+        within "#pet-0" do
+            expect(page).to have_button("Reject application for Babe")
+            click_button "Reject application for Babe"
+            expect(page).to_not have_button("Approve application for Babe")
+            expect(page).to_not have_button("Reject application for Babe")
+            expect(page).to have_content("rejected")
+        end
+            
+        within "#pet-1" do
+            expect(page).to have_button("Reject application for Elle")
+            click_button "Reject application for Elle"
+            expect(page).to_not have_button("Approve application for Elle")
+            expect(page).to_not have_button("Reject application for Elle")
+            expect(page).to have_content("rejected")
+        end
+    end
+
     it "can approve an application without affecting other applications for that pet" do
-
-        visit "/admin/applications/#{@application_1.id}"
-        
-        click_button "Approve Babe's Adoption"
+        PetApplication.create(pet_id: @pet_2.id, application_id: @application.id)
+        PetApplication.create(pet_id: @pet_2.id, application_id: @application_2.id)
+        visit "/admin/applications/#{@application.id}"
+        click_button "Approve application for Babe"
         
         visit "/admin/applications/#{@application_2.id}"
-        expect(page).to have_content("Approve Babe's Adoption")
-        expect(page).to have_content("Reject Babe's Adoption")
-    end
 
+        expect(page).to have_button("Approve application for Babe")
+        expect(page).to have_button("Reject application for Babe")
+    end
+        
     it "can reject an application without affecting other applications for that pet" do
-
-        visit "/admin/applications/#{@application_1.id}"
-        
-        click_button "Reject Babe's Adoption"
-        
+        PetApplication.create(pet_id: @pet_2.id, application_id: @application.id)
+        PetApplication.create(pet_id: @pet_2.id, application_id: @application_2.id)
+        visit "/admin/applications/#{@application.id}"
+            
+        click_button "Reject application for Babe"
+            
         visit "/admin/applications/#{@application_2.id}"
-        expect(page).to have_content("Approve Babe's Adoption")
-        expect(page).to have_content("Reject Babe's Adoption")
+        expect(page).to have_button("Approve application for Babe")
+        expect(page).to have_button("Reject application for Babe")
     end
-
 end
+    
