@@ -35,7 +35,7 @@ RSpec.describe 'the admin shelters index' do
   it 'lists all shelter names with pending applications' do
     visit "/admin/shelters"
 
-    expect(page).to have_content("Shelter's with Pending Applications")
+    expect(page).to have_content("Shelters with Pending Applications")
 
     within "#shelter-pending" do
       expect(page).to_not have_content(@shelter_1.name)

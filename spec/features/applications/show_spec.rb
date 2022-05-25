@@ -75,6 +75,7 @@ RSpec.describe 'the application show' do
 
         expect(current_path).to eq("/applications/#{application.id}")
         expect(page).to have_content("Application Status: Pending")
+        save_and_open_page
         expect(page).to have_content("Babe")
         expect(page).to have_content("This is a description")
         expect(page).to_not have_content("Add a Pet to this Application")
